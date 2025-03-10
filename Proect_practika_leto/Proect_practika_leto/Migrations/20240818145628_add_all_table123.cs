@@ -18,7 +18,7 @@ namespace Proect_practika_leto.Migrations
                     Number = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     Date = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    СontractorCode = table.Column<int>(type: "INTEGER", nullable: false),
+                    ContractorCode = table.Column<int>(type: "INTEGER", nullable: false),
                     MaterialCode = table.Column<int>(type: "INTEGER", nullable: false),
                     Quantity = table.Column<string>(type: "TEXT", nullable: false),
                     PlannedCompletionDate = table.Column<DateTime>(type: "TEXT", nullable: false),
@@ -29,8 +29,8 @@ namespace Proect_practika_leto.Migrations
                 {
                     table.PrimaryKey("PK_ProductionOrders", x => x.Number);
                     table.ForeignKey(
-                        name: "FK_ProductionOrders_Contractors_СontractorCode",
-                        column: x => x.СontractorCode,
+                        name: "FK_ProductionOrders_Contractors_ContractorCode",
+                        column: x => x.ContractorCode,
                         principalTable: "Contractors",
                         principalColumn: "Code",
                         onDelete: ReferentialAction.Cascade);
@@ -98,15 +98,15 @@ namespace Proect_practika_leto.Migrations
                     WareHouseRecipientCode = table.Column<int>(type: "INTEGER", nullable: false),
                     OrderNumber = table.Column<int>(type: "INTEGER", nullable: false),
                     ProductionCode = table.Column<int>(type: "INTEGER", nullable: false),
-                    СontractorCode = table.Column<int>(type: "INTEGER", nullable: false),
+                    ContractorCode = table.Column<int>(type: "INTEGER", nullable: false),
                     StaffCode = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_DocumentsMovementMaterials", x => x.Code);
                     table.ForeignKey(
-                        name: "FK_DocumentsMovementMaterials_Contractors_СontractorCode",
-                        column: x => x.СontractorCode,
+                        name: "FK_DocumentsMovementMaterials_Contractors_ContractorCode",
+                        column: x => x.ContractorCode,
                         principalTable: "Contractors",
                         principalColumn: "Code",
                         onDelete: ReferentialAction.Cascade);
@@ -198,9 +198,9 @@ namespace Proect_practika_leto.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_DocumentsMovementMaterials_СontractorCode",
+                name: "IX_DocumentsMovementMaterials_ContractorCode",
                 table: "DocumentsMovementMaterials",
-                column: "СontractorCode");
+                column: "ContractorCode");
 
             migrationBuilder.CreateIndex(
                 name: "IX_DocumentsMovementMaterials_MaterialCode",
@@ -258,9 +258,9 @@ namespace Proect_practika_leto.Migrations
                 column: "WareHouseRawMaterialCode");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ProductionOrders_СontractorCode",
+                name: "IX_ProductionOrders_ContractorCode",
                 table: "ProductionOrders",
-                column: "СontractorCode");
+                column: "ContractorCode");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ProductionOrders_MaterialCode",

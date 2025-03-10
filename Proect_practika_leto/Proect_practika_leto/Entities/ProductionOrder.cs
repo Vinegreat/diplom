@@ -14,7 +14,7 @@ namespace Proect_practika_leto.Entities
         public Contractor Contractor { get; set; }
 
         [ForeignKey(nameof(Contractor))]
-        public int СontractorCode { get; set; }
+        public int ContractorCode { get; set; }
 
         public Material Material { get; set; }
 

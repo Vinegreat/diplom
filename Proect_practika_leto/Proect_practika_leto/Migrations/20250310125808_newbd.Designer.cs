@@ -11,8 +11,8 @@ using Proect_practika_leto.Services;
 namespace Proect_practika_leto.Migrations
 {
     [DbContext(typeof(DbPractickaContext))]
-    [Migration("20240818160905_add_all_table1234")]
-    partial class add_all_table1234
+    [Migration("20250310125808_newbd")]
+    partial class newbd
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -20,10 +20,46 @@ namespace Proect_practika_leto.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.8");
 
+            modelBuilder.Entity("Proect_practika_leto.Entities.Contractor", b =>
+                {
+                    b.Property<int>("Code")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("ContactFace")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("INN")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Phone")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Code");
+
+                    b.HasIndex("INN");
+
+                    b.ToTable("Contractors");
+                });
+
             modelBuilder.Entity("Proect_practika_leto.Entities.DocumentsMovementMaterial", b =>
                 {
                     b.Property<int>("Code")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("ContractorCode")
                         .HasColumnType("INTEGER");
 
                     b.Property<DateOnly>("DateDocument")
@@ -56,10 +92,9 @@ namespace Proect_practika_leto.Migrations
                     b.Property<int>("WareHouseSenderCode")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("ContractorCode")
-                        .HasColumnType("INTEGER");
-
                     b.HasKey("Code");
+
+                    b.HasIndex("ContractorCode");
 
                     b.HasIndex("MaterialCode");
 
@@ -72,8 +107,6 @@ namespace Proect_practika_leto.Migrations
                     b.HasIndex("WareHouseRecipientCode");
 
                     b.HasIndex("WareHouseSenderCode");
-
-                    b.HasIndex("ContractorCode");
 
                     b.ToTable("DocumentsMovementMaterials");
                 });
@@ -140,13 +173,10 @@ namespace Proect_practika_leto.Migrations
                     b.Property<int>("EquipmentCode")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("OrderNumber")
+                    b.Property<int>("OrderCode")
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("PreparedMaterialCode")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("ProductionCode")
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("WareHousePreparedMaterialCode")
@@ -159,7 +189,7 @@ namespace Proect_practika_leto.Migrations
 
                     b.HasIndex("EquipmentCode");
 
-                    b.HasIndex("OrderNumber");
+                    b.HasIndex("OrderCode");
 
                     b.HasIndex("PreparedMaterialCode");
 
@@ -179,6 +209,9 @@ namespace Proect_practika_leto.Migrations
                     b.Property<DateTime>("ActualDateCompletion")
                         .HasColumnType("TEXT");
 
+                    b.Property<int>("ContractorCode")
+                        .HasColumnType("INTEGER");
+
                     b.Property<DateTime>("Date")
                         .HasColumnType("TEXT");
 
@@ -194,16 +227,13 @@ namespace Proect_practika_leto.Migrations
                     b.Property<int>("StaffCode")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("ContractorCode")
-                        .HasColumnType("INTEGER");
-
                     b.HasKey("Number");
+
+                    b.HasIndex("ContractorCode");
 
                     b.HasIndex("MaterialCode");
 
                     b.HasIndex("StaffCode");
-
-                    b.HasIndex("ContractorCode");
 
                     b.ToTable("ProductionOrders");
                 });
@@ -285,41 +315,14 @@ namespace Proect_practika_leto.Migrations
                     b.ToTable("WareHouses");
                 });
 
-            modelBuilder.Entity("Proect_practika_leto.Entities.Сontractor", b =>
-                {
-                    b.Property<int>("Code")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("ContactFace")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("INN")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Phone")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Code");
-
-                    b.HasIndex("INN");
-
-                    b.ToTable("Contractors");
-                });
-
             modelBuilder.Entity("Proect_practika_leto.Entities.DocumentsMovementMaterial", b =>
                 {
+                    b.HasOne("Proect_practika_leto.Entities.Contractor", "Contractor")
+                        .WithMany()
+                        .HasForeignKey("ContractorCode")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Proect_practika_leto.Entities.Material", "Material")
                         .WithMany()
                         .HasForeignKey("MaterialCode")
@@ -356,11 +359,7 @@ namespace Proect_practika_leto.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Proect_practika_leto.Entities.Сontractor", "Сontractor")
-                        .WithMany()
-                        .HasForeignKey("ContractorCode")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Navigation("Contractor");
 
                     b.Navigation("Material");
 
@@ -373,8 +372,6 @@ namespace Proect_practika_leto.Migrations
                     b.Navigation("WareHouseRecipient");
 
                     b.Navigation("WareHouseSender");
-
-                    b.Navigation("Сontractor");
                 });
 
             modelBuilder.Entity("Proect_practika_leto.Entities.Material", b =>
@@ -398,7 +395,7 @@ namespace Proect_practika_leto.Migrations
 
                     b.HasOne("Proect_practika_leto.Entities.ProductionOrder", "Order")
                         .WithMany()
-                        .HasForeignKey("OrderNumber")
+                        .HasForeignKey("OrderCode")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -433,6 +430,12 @@ namespace Proect_practika_leto.Migrations
 
             modelBuilder.Entity("Proect_practika_leto.Entities.ProductionOrder", b =>
                 {
+                    b.HasOne("Proect_practika_leto.Entities.Contractor", "Contractor")
+                        .WithMany()
+                        .HasForeignKey("ContractorCode")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Proect_practika_leto.Entities.Material", "Material")
                         .WithMany()
                         .HasForeignKey("MaterialCode")
@@ -445,17 +448,11 @@ namespace Proect_practika_leto.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Proect_practika_leto.Entities.Сontractor", "Сontractor")
-                        .WithMany()
-                        .HasForeignKey("ContractorCode")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Navigation("Contractor");
 
                     b.Navigation("Material");
 
                     b.Navigation("Staff");
-
-                    b.Navigation("Сontractor");
                 });
 
             modelBuilder.Entity("Proect_practika_leto.Entities.TechnologicalMap", b =>

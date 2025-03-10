@@ -5,7 +5,7 @@ namespace Proect_practika_leto.DTO.ProductionOrders
     public class OrderEditDTO
     {
         [Required]
-        public int СontractorCode { get; set; }
+        public int ContractorCode { get; set; }
 
         [Required]
         public int MaterialCode { get; set; }

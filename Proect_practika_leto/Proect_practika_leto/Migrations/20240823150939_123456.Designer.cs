@@ -56,7 +56,7 @@ namespace Proect_practika_leto.Migrations
                     b.Property<int>("WareHouseSenderCode")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("СontractorCode")
+                    b.Property<int>("ContractorCode")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Code");
@@ -73,7 +73,7 @@ namespace Proect_practika_leto.Migrations
 
                     b.HasIndex("WareHouseSenderCode");
 
-                    b.HasIndex("СontractorCode");
+                    b.HasIndex("ContractorCode");
 
                     b.ToTable("DocumentsMovementMaterials");
                 });
@@ -191,7 +191,7 @@ namespace Proect_practika_leto.Migrations
                     b.Property<int>("StaffCode")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("СontractorCode")
+                    b.Property<int>("ContractorCode")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Number");
@@ -200,7 +200,7 @@ namespace Proect_practika_leto.Migrations
 
                     b.HasIndex("StaffCode");
 
-                    b.HasIndex("СontractorCode");
+                    b.HasIndex("ContractorCode");
 
                     b.ToTable("ProductionOrders");
                 });
@@ -355,7 +355,7 @@ namespace Proect_practika_leto.Migrations
 
                     b.HasOne("Proect_practika_leto.Entities.Сontractor", "Сontractor")
                         .WithMany()
-                        .HasForeignKey("СontractorCode")
+                        .HasForeignKey("ContractorCode")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -444,7 +444,7 @@ namespace Proect_practika_leto.Migrations
 
                     b.HasOne("Proect_practika_leto.Entities.Сontractor", "Сontractor")
                         .WithMany()
-                        .HasForeignKey("СontractorCode")
+                        .HasForeignKey("ContractorCode")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

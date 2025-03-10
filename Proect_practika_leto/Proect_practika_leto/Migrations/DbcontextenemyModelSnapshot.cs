@@ -56,6 +56,9 @@ namespace Proect_practika_leto.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<int>("ContractorCode")
+                        .HasColumnType("INTEGER");
+
                     b.Property<DateOnly>("DateDocument")
                         .HasColumnType("TEXT");
 
@@ -86,10 +89,9 @@ namespace Proect_practika_leto.Migrations
                     b.Property<int>("WareHouseSenderCode")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("СontractorCode")
-                        .HasColumnType("INTEGER");
-
                     b.HasKey("Code");
+
+                    b.HasIndex("ContractorCode");
 
                     b.HasIndex("MaterialCode");
 
@@ -102,8 +104,6 @@ namespace Proect_practika_leto.Migrations
                     b.HasIndex("WareHouseRecipientCode");
 
                     b.HasIndex("WareHouseSenderCode");
-
-                    b.HasIndex("СontractorCode");
 
                     b.ToTable("DocumentsMovementMaterials");
                 });
@@ -206,6 +206,9 @@ namespace Proect_practika_leto.Migrations
                     b.Property<DateTime>("ActualDateCompletion")
                         .HasColumnType("TEXT");
 
+                    b.Property<int>("ContractorCode")
+                        .HasColumnType("INTEGER");
+
                     b.Property<DateTime>("Date")
                         .HasColumnType("TEXT");
 
@@ -221,16 +224,13 @@ namespace Proect_practika_leto.Migrations
                     b.Property<int>("StaffCode")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("СontractorCode")
-                        .HasColumnType("INTEGER");
-
                     b.HasKey("Number");
+
+                    b.HasIndex("ContractorCode");
 
                     b.HasIndex("MaterialCode");
 
                     b.HasIndex("StaffCode");
-
-                    b.HasIndex("СontractorCode");
 
                     b.ToTable("ProductionOrders");
                 });
@@ -314,6 +314,12 @@ namespace Proect_practika_leto.Migrations
 
             modelBuilder.Entity("Proect_practika_leto.Entities.DocumentsMovementMaterial", b =>
                 {
+                    b.HasOne("Proect_practika_leto.Entities.Contractor", "Contractor")
+                        .WithMany()
+                        .HasForeignKey("ContractorCode")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Proect_practika_leto.Entities.Material", "Material")
                         .WithMany()
                         .HasForeignKey("MaterialCode")
@@ -347,12 +353,6 @@ namespace Proect_practika_leto.Migrations
                     b.HasOne("Proect_practika_leto.Entities.WareHouse", "WareHouseSender")
                         .WithMany()
                         .HasForeignKey("WareHouseSenderCode")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Proect_practika_leto.Entities.Contractor", "Contractor")
-                        .WithMany()
-                        .HasForeignKey("СontractorCode")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -427,6 +427,12 @@ namespace Proect_practika_leto.Migrations
 
             modelBuilder.Entity("Proect_practika_leto.Entities.ProductionOrder", b =>
                 {
+                    b.HasOne("Proect_practika_leto.Entities.Contractor", "Contractor")
+                        .WithMany()
+                        .HasForeignKey("ContractorCode")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Proect_practika_leto.Entities.Material", "Material")
                         .WithMany()
                         .HasForeignKey("MaterialCode")
@@ -436,12 +442,6 @@ namespace Proect_practika_leto.Migrations
                     b.HasOne("Proect_practika_leto.Entities.Staff", "Staff")
                         .WithMany()
                         .HasForeignKey("StaffCode")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Proect_practika_leto.Entities.Contractor", "Contractor")
-                        .WithMany()
-                        .HasForeignKey("СontractorCode")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
