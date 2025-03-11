@@ -31,6 +31,4 @@ export default ()=>
     return <>
         <ProTable dataSource={data} columns={columns}  />
     </>
-
-
 }

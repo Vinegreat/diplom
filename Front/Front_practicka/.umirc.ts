@@ -34,6 +34,11 @@ export default defineConfig({
       name:'Заказ на производство' ,
       path:'/productionOperations' ,
       component:'./ProductionOperations'
+    },
+    {
+      name:'ТехКарта' , 
+      path : '/technomap',
+      component:'./TecnhoMap'
     }
   ],
   npmClient: 'npm',
