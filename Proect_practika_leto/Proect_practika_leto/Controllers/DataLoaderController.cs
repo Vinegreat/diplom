@@ -11,9 +11,9 @@ namespace Proect_practika_leto.Controllers
     {
         // Определение метода, который будет обрабатывать POST-запросы по маршруту "api/DataLoader/loadunits"
         [HttpPost]
-        public async Task loadunits(List<Staff> units) 
+        public async Task loadunits(List<WareHouse> units) 
         { 
-            await dbcontextenemy.Staff.AddRangeAsync(units);
+            await dbcontextenemy.WareHouses.AddRangeAsync(units);
 
             await dbcontextenemy.SaveChangesAsync();
         } 

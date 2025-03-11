@@ -29,6 +29,11 @@ export default defineConfig({
       name:'Заказы' , 
       path: '/orders' ,
       component: './Zakazy'
+    },  
+    {
+      name:'Заказ на производство' ,
+      path:'/productionOperations' ,
+      component:'./ProductionOperations'
     }
   ],
   npmClient: 'npm',

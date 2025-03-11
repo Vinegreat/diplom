@@ -30,5 +30,14 @@ namespace Proect_practika_leto.Services
         {
             return await dbcontext.ProductionOrders.FirstOrDefaultAsync(x=>x.Number==numberid);
         }
+        public async Task<bool> DeleteOrder(int number) 
+        {
+            var order = await dbcontext.ProductionOrders.FirstOrDefaultAsync(x => x.Number == number) ;
+            if (order == null) return false;
+            dbcontext.ProductionOrders.Remove(order);
+            await dbcontext.SaveChangesAsync();
+            return true;
+
+        }
     }
 }
