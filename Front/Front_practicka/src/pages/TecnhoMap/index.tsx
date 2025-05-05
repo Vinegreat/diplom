@@ -9,9 +9,11 @@ const TechnologicalMapPage = () => {
   const [loading, setLoading] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [editingItem, setEditingItem] = useState(null);
+  const [materials, setMaterials] = useState([]);
   const [form] = Form.useForm();
 
-  const fetchData = async () => {
+  // Загружает список технологических карт с сервера
+const fetchData = async () => {
     setLoading(true);
     try {
       const response = await axios.get('http://localhost:5084/api/TechnologicalMap/GetAll');
@@ -23,34 +25,49 @@ const TechnologicalMapPage = () => {
     }
   };
 
-  const handleAdd = () => {
+  // Загружает справочник материалов (включая единицы измерения)
+const fetchMaterials = async () => {
+    try {
+      const response = await axios.get('http://localhost:5084/api/Dictionary/GetMaterials');
+      setMaterials(response.data);
+    } catch (error) {
+      message.error('Ошибка при загрузке справочника материалов');
+    }
+  };
+
+  // Открывает форму для добавления новой записи
+const handleAdd = () => {
     setEditingItem(null);
     form.resetFields();
     setIsModalVisible(true);
   };
 
-  const handleEdit = (record) => {
+  // Открывает форму редактирования и заполняет поля значениями выбранной записи
+const handleEdit = (record) => {
     setEditingItem(record);
     form.setFieldsValue({
       ...record,
       equipmentCode: record.equipment?.code,
       preparedMaterialCode: record.preparedMaterial?.code,
-      rawMaterialCode: record.rawMaterial?.code
+      rawMaterialCode: record.rawMaterial?.code,
+      measurementUnitCode: record.preparedMaterial?.measurementUnitCode
     });
     setIsModalVisible(true);
   };
 
-  const handleSubmit = async () => {
+  // Обрабатывает сохранение данных: добавление или редактирование записи
+const handleSubmit = async () => {
     try {
       const values = await form.validateFields();
+      const payload = {
+        ...values,
+        code: editingItem ? editingItem.code : undefined
+      };
       if (editingItem) {
-        await axios.post('http://localhost:5084/api/TechnologicalMap/Edit', {
-          code: editingItem.code,
-          ...values
-        });
+        await axios.post('http://localhost:5084/api/TechnologicalMap/Edit', payload);
         message.success('Успешно отредактировано');
       } else {
-        await axios.post('http://localhost:5084/api/TechnologicalMap/Add', values);
+        await axios.post('http://localhost:5084/api/TechnologicalMap/Add', payload);
         message.success('Успешно добавлено');
       }
       setIsModalVisible(false);
@@ -60,7 +77,8 @@ const TechnologicalMapPage = () => {
     }
   };
 
-  const columns = [
+  // Определяет структуру столбцов таблицы
+const columns = [
     {
       title: 'Код',
       dataIndex: 'code',
@@ -72,9 +90,15 @@ const TechnologicalMapPage = () => {
       key: 'equipmentName',
     },
     {
-      title: 'Подготовленный материал',
+      title: 'Готовый материал',
       dataIndex: ['preparedMaterial', 'nameMaterial'],
       key: 'preparedMaterialName',
+    },
+    {
+      title: 'Ед. изм.',
+      dataIndex: ['preparedMaterial', 'measurementUnit'],
+      key: 'measurementUnit',
+      render: (unit) => unit?.name || ''
     },
     {
       title: 'Кол-во подготовленного материала',
@@ -104,6 +128,7 @@ const TechnologicalMapPage = () => {
 
   useEffect(() => {
     fetchData();
+    fetchMaterials();
   }, []);
 
   return (
@@ -122,17 +147,37 @@ const TechnologicalMapPage = () => {
         cancelText="Отмена"
       >
         <Form form={form} layout="vertical">
-          <Form.Item name="equipmentCode" label="Код оборудования" rules={[{ required: true }]}> 
-            <InputNumber min={1} style={{ width: '100%' }} />
+          <Form.Item name="equipmentCode" label="Оборудование" rules={[{ required: true }]}> 
+            <Select placeholder="Выберите оборудование">
+              {[...new Set(materials.map(m => m.code))].map(code => {
+                const name = data.find(d => d.equipment?.code === code)?.equipment?.name || `Оборудование ${code}`;
+                return <Option key={code} value={code}>{name}</Option>;
+              })}
+            </Select>
           </Form.Item>
-          <Form.Item name="preparedMaterialCode" label="Код подготовленного материала" rules={[{ required: true }]}> 
-            <InputNumber min={1} style={{ width: '100%' }} />
+          <Form.Item name="preparedMaterialCode" label="Подготовленный материал" rules={[{ required: true }]}> 
+            <Select placeholder="Выберите материал">
+              {materials.map(mat => (
+                <Option key={mat.code} value={mat.code}>{mat.nameMaterial.trim()}</Option>
+              ))}
+            </Select>
+          </Form.Item>
+          <Form.Item name="measurementUnitCode" label="Единица измерения">
+            <Select placeholder="Выберите единицу измерения">
+              {materials.map(mat => (
+                <Option key={mat.measurementUnitCode} value={mat.measurementUnitCode}>{mat.measurementUnit?.name}</Option>
+              ))}
+            </Select>
           </Form.Item>
           <Form.Item name="quantityPreparedMaterial" label="Кол-во подготовленного материала" rules={[{ required: true }]}> 
             <InputNumber min={1} style={{ width: '100%' }} />
           </Form.Item>
-          <Form.Item name="rawMaterialCode" label="Код сырья" rules={[{ required: true }]}> 
-            <InputNumber min={1} style={{ width: '100%' }} />
+          <Form.Item name="rawMaterialCode" label="Сырьё" rules={[{ required: true }]}> 
+            <Select placeholder="Выберите сырьё">
+              {materials.map(mat => (
+                <Option key={mat.code} value={mat.code}>{mat.nameMaterial.trim()}</Option>
+              ))}
+            </Select>
           </Form.Item>
           <Form.Item name="quantityRawMaterial" label="Кол-во сырья" rules={[{ required: true }]}> 
             <InputNumber min={1} style={{ width: '100%' }} />

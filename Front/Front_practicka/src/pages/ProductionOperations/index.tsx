@@ -110,7 +110,7 @@ const ProductionOperations = () => {
       render: (code) => getLabel(orders, "number", "number", code),
     },
     {
-      title: "Материал",
+      title: "готовый материал",
       dataIndex: "preparedMaterialCode",
       render: (code) => getLabel(materials, "code", "nameMaterial", code),
     },

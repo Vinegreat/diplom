@@ -117,7 +117,7 @@ export default function OrdersPage() {
 
   const handleEdit = async () => {
     try {
-      await axios.put(`${API_BASE}/Edit`, editOrder);
+      await axios.post(`${API_BASE}/Edit`, editOrder);
       message.success('Заказ успешно обновлен');
       fetchOrders();
       setEditOrder({
