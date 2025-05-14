@@ -1,4 +1,5 @@
 import { defineConfig } from '@umijs/max';
+import { Component } from 'react';
 
 export default defineConfig({
   antd: {},
@@ -21,9 +22,9 @@ export default defineConfig({
       component: './Home',
     },
     {
-      name:'Материалы' ,
-      path:'/materials' ,
-      component:'./Materials'
+      name:'Справочник' ,
+      path:'/library' ,
+      component:'./Library'
     },
     {
       name:'Заказы' , 
@@ -39,7 +40,12 @@ export default defineConfig({
       name:'ТехКарта' , 
       path : '/technomap',
       component:'./TecnhoMap'
-    }
+    },
+    {
+      name:'Документы передвижения материалов' , 
+      path : '/documentMovementMaterial',
+      component:'./DocumentMovementMaterial'
+    }  
   ],
   npmClient: 'npm',
 });

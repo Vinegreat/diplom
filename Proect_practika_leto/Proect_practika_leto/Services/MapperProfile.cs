@@ -26,6 +26,12 @@ namespace Proect_practika_leto.Services
 
             CreateMap<ProductionOperationEditDTO, ProductionOperation>()
                 .ForMember(x => x.Number, opt => opt.MapFrom(xx => xx.Number));
+            //Маппинг для DocumentMovementMaterial
+            CreateMap<DocumentsMovementMaterialAddDTO, DocumentsMovementMaterial>();
+
+            CreateMap<DocumentsMovementMaterialEditDTO, DocumentsMovementMaterial>()
+                .ForMember(dest => dest.Code, opt => opt.Ignore()); // если обновляется вручную
+
         }
     }
 }

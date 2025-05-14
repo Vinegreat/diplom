@@ -1,171 +1,189 @@
+// ✅ ОБНОВЛЕННЫЙ КОД ДЛЯ СТРАНИЦЫ ТЕХНОЛОГИЧЕСКОЙ КАРТЫ
+
 import React, { useEffect, useState } from 'react';
-import { Table, Button, Modal, Form, InputNumber, Select, message } from 'antd';
 import axios from 'axios';
+import {
+  Button, Table, Modal, Form, InputNumber,
+  Select, message, Space, Popconfirm, Input
+} from 'antd';
+import * as XLSX from 'xlsx';
 
 const { Option } = Select;
+const { Search } = Input;
+
+const API_BASE = 'http://localhost:5084/api/TechnologicalMap';
 
 const TechnologicalMapPage = () => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingItem, setEditingItem] = useState(null);
   const [materials, setMaterials] = useState([]);
+  const [equipments, setEquipments] = useState([]);
   const [form] = Form.useForm();
+  const [searchText, setSearchText] = useState('');
 
-  // Загружает список технологических карт с сервера
-const fetchData = async () => {
+  const fetchData = async () => {
     setLoading(true);
     try {
-      const response = await axios.get('http://localhost:5084/api/TechnologicalMap/GetAll');
-      setData(response.data);
-    } catch (error) {
+      const res = await axios.get(`${API_BASE}/GetAll`);
+      setData(res.data);
+    } catch (err) {
       message.error('Ошибка при загрузке данных');
     } finally {
       setLoading(false);
     }
   };
 
-  // Загружает справочник материалов (включая единицы измерения)
-const fetchMaterials = async () => {
+  const fetchDictionaries = async () => {
     try {
-      const response = await axios.get('http://localhost:5084/api/Dictionary/GetMaterials');
-      setMaterials(response.data);
-    } catch (error) {
-      message.error('Ошибка при загрузке справочника материалов');
+      const [resEquipments, resMaterials] = await Promise.all([
+        axios.get('http://localhost:5084/api/Dictionary/GetEquipment'),
+        axios.get('http://localhost:5084/api/Dictionary/GetMaterials')
+      ]);
+      setEquipments(resEquipments.data);
+      setMaterials(resMaterials.data);
+    } catch (err) {
+      message.error('Ошибка при загрузке справочников');
     }
   };
 
-  // Открывает форму для добавления новой записи
-const handleAdd = () => {
-    setEditingItem(null);
-    form.resetFields();
-    setIsModalVisible(true);
-  };
-
-  // Открывает форму редактирования и заполняет поля значениями выбранной записи
-const handleEdit = (record) => {
-    setEditingItem(record);
-    form.setFieldsValue({
-      ...record,
-      equipmentCode: record.equipment?.code,
-      preparedMaterialCode: record.preparedMaterial?.code,
-      rawMaterialCode: record.rawMaterial?.code,
-      measurementUnitCode: record.preparedMaterial?.measurementUnitCode
-    });
-    setIsModalVisible(true);
-  };
-
-  // Обрабатывает сохранение данных: добавление или редактирование записи
-const handleSubmit = async () => {
+  const handleSubmit = async () => {
     try {
       const values = await form.validateFields();
-      const payload = {
-        ...values,
-        code: editingItem ? editingItem.code : undefined
-      };
-      if (editingItem) {
-        await axios.post('http://localhost:5084/api/TechnologicalMap/Edit', payload);
-        message.success('Успешно отредактировано');
-      } else {
-        await axios.post('http://localhost:5084/api/TechnologicalMap/Add', payload);
-        message.success('Успешно добавлено');
-      }
-      setIsModalVisible(false);
+      const payload = { ...values };
+      if (editingItem) payload.code = editingItem.code;
+
+      const url = editingItem ? `${API_BASE}/Edit` : `${API_BASE}/Add`;
+      await axios.post(url, payload);
+      message.success(editingItem ? 'Запись обновлена' : 'Запись добавлена');
+
+      setIsModalOpen(false);
+      form.resetFields();
+      setEditingItem(null);
       fetchData();
-    } catch (error) {
+    } catch (err) {
       message.error('Ошибка при сохранении');
     }
   };
 
-  // Определяет структуру столбцов таблицы
-const columns = [
-    {
-      title: 'Код',
-      dataIndex: 'code',
-      key: 'code',
-    },
-    {
-      title: 'Оборудование',
-      dataIndex: ['equipment', 'name'],
-      key: 'equipmentName',
-    },
-    {
-      title: 'Готовый материал',
-      dataIndex: ['preparedMaterial', 'nameMaterial'],
-      key: 'preparedMaterialName',
-    },
-    {
-      title: 'Ед. изм.',
-      dataIndex: ['preparedMaterial', 'measurementUnit'],
-      key: 'measurementUnit',
-      render: (unit) => unit?.name || ''
-    },
-    {
-      title: 'Кол-во подготовленного материала',
-      dataIndex: 'quantityPreparedMaterial',
-      key: 'quantityPreparedMaterial',
-    },
-    {
-      title: 'Сырьё',
-      dataIndex: ['rawMaterial', 'nameMaterial'],
-      key: 'rawMaterialName',
-    },
-    {
-      title: 'Кол-во сырья',
-      dataIndex: 'quantityRawMaterial',
-      key: 'quantityRawMaterial',
-    },
+  const handleDelete = async (code) => {
+    try {
+      await axios.delete(`${API_BASE}/Delete/${code}`);
+      message.success('Запись удалена');
+      fetchData();
+    } catch (err) {
+      message.error('Ошибка при удалении');
+    }
+  };
+
+  const exportToExcel = () => {
+    const exportData = data.map(item => ({
+      code: item.code,
+      equipment: item.equipment?.name,
+      preparedMaterial: item.preparedMaterial?.nameMaterial,
+      quantityPreparedMaterial: item.quantityPreparedMaterial,
+      rawMaterial: item.rawMaterial?.nameMaterial,
+      quantityRawMaterial: item.quantityRawMaterial
+    }));
+
+    const worksheet = XLSX.utils.json_to_sheet(exportData);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Техкарты');
+    XLSX.writeFile(workbook, 'technological_map.xlsx');
+  };
+
+  const openModal = (record = null) => {
+    setEditingItem(record);
+    if (record) {
+      form.setFieldsValue({
+        equipmentCode: record.equipmentCode,
+        preparedMaterialCode: record.preparedMaterialCode,
+        quantityPreparedMaterial: record.quantityPreparedMaterial,
+        rawMaterialCode: record.rawMaterialCode,
+        quantityRawMaterial: record.quantityRawMaterial
+      });
+    } else {
+      form.resetFields();
+    }
+    setIsModalOpen(true);
+  };
+
+  const filteredData = data.filter(item =>
+    item.preparedMaterial?.nameMaterial?.toLowerCase().includes(searchText.toLowerCase()) ||
+    item.rawMaterial?.nameMaterial?.toLowerCase().includes(searchText.toLowerCase())
+  );
+
+  const columns = [
+    { title: 'Код', dataIndex: 'code' },
+    { title: 'Оборудование', dataIndex: ['equipment', 'name'] },
+    { title: 'Подготовленный материал', dataIndex: ['preparedMaterial', 'nameMaterial'] },
+    { title: 'Кол-во подготовленного', dataIndex: 'quantityPreparedMaterial' },
+    { title: 'Сырьё', dataIndex: ['rawMaterial', 'nameMaterial'] },
+    { title: 'Кол-во сырья', dataIndex: 'quantityRawMaterial' },
     {
       title: 'Действия',
-      key: 'actions',
       render: (_, record) => (
-        <Button type="link" onClick={() => handleEdit(record)}>
-          Редактировать
-        </Button>
-      ),
-    },
+        <Space>
+          <Button onClick={() => openModal(record)} type="link">Редактировать</Button>
+          <Popconfirm
+            title="Удалить запись?"
+            onConfirm={() => handleDelete(record.code)}
+            okText="Да"
+            cancelText="Нет"
+          >
+            <Button danger type="link">Удалить</Button>
+          </Popconfirm>
+        </Space>
+      )
+    }
   ];
 
   useEffect(() => {
     fetchData();
-    fetchMaterials();
+    fetchDictionaries();
   }, []);
 
   return (
-    <div className="p-4">
-      <Button type="primary" onClick={handleAdd} className="mb-4">
-        Добавить запись
-      </Button>
-      <Table columns={columns} dataSource={data} rowKey="code" loading={loading} />
+    <div className="p-6">
+      <Space style={{ marginBottom: 16 }}>
+        <Button type="primary" onClick={() => openModal()}>Добавить</Button>
+        <Button onClick={exportToExcel}>Экспорт в Excel</Button>
+        <Search placeholder="Поиск по материалу" onSearch={setSearchText} allowClear style={{ width: 300 }} />
+      </Space>
+
+      <Table
+        rowKey="code"
+        loading={loading}
+        dataSource={filteredData}
+        columns={columns}
+        bordered
+      />
 
       <Modal
-        title={editingItem ? 'Редактирование записи' : 'Добавление записи'}
-        open={isModalVisible}
-        onOk={handleSubmit}
-        onCancel={() => setIsModalVisible(false)}
+        open={isModalOpen}
+        title={editingItem ? 'Редактировать' : 'Добавить'}
+        onCancel={() => {
+          setIsModalOpen(false);
+          setEditingItem(null);
+          form.resetFields();
+        }}
+        onOk={() => form.submit()}
         okText="Сохранить"
         cancelText="Отмена"
       >
-        <Form form={form} layout="vertical">
+        <Form form={form} layout="vertical" onFinish={handleSubmit}>
           <Form.Item name="equipmentCode" label="Оборудование" rules={[{ required: true }]}> 
             <Select placeholder="Выберите оборудование">
-              {[...new Set(materials.map(m => m.code))].map(code => {
-                const name = data.find(d => d.equipment?.code === code)?.equipment?.name || `Оборудование ${code}`;
-                return <Option key={code} value={code}>{name}</Option>;
-              })}
+              {equipments.map((item) => (
+                <Option key={item.code} value={item.code}>{item.name}</Option>
+              ))}
             </Select>
           </Form.Item>
           <Form.Item name="preparedMaterialCode" label="Подготовленный материал" rules={[{ required: true }]}> 
             <Select placeholder="Выберите материал">
-              {materials.map(mat => (
-                <Option key={mat.code} value={mat.code}>{mat.nameMaterial.trim()}</Option>
-              ))}
-            </Select>
-          </Form.Item>
-          <Form.Item name="measurementUnitCode" label="Единица измерения">
-            <Select placeholder="Выберите единицу измерения">
-              {materials.map(mat => (
-                <Option key={mat.measurementUnitCode} value={mat.measurementUnitCode}>{mat.measurementUnit?.name}</Option>
+              {materials.map((item) => (
+                <Option key={item.code} value={item.code}>{item.nameMaterial}</Option>
               ))}
             </Select>
           </Form.Item>
@@ -174,8 +192,8 @@ const columns = [
           </Form.Item>
           <Form.Item name="rawMaterialCode" label="Сырьё" rules={[{ required: true }]}> 
             <Select placeholder="Выберите сырьё">
-              {materials.map(mat => (
-                <Option key={mat.code} value={mat.code}>{mat.nameMaterial.trim()}</Option>
+              {materials.map((item) => (
+                <Option key={item.code} value={item.code}>{item.nameMaterial}</Option>
               ))}
             </Select>
           </Form.Item>
