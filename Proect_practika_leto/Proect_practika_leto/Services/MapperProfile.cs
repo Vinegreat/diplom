@@ -32,6 +32,8 @@ namespace Proect_practika_leto.Services
             CreateMap<DocumentsMovementMaterialEditDTO, DocumentsMovementMaterial>()
                 .ForMember(dest => dest.Code, opt => opt.Ignore()); // если обновляется вручную
 
+            CreateMap<RawMaterialArrivalAddDTO, RawMaterialArrival>();
+
         }
     }
 }

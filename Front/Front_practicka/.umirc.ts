@@ -45,6 +45,11 @@ export default defineConfig({
       name:'Документы передвижения материалов' , 
       path : '/documentMovementMaterial',
       component:'./DocumentMovementMaterial'
+    },
+    {
+      name:'Добавления сырья' , 
+      path : '/rawMaterialArrival',
+      component:'./RawMaterialArrival'
     }  
   ],
   npmClient: 'npm',

@@ -21,6 +21,8 @@ namespace Proect_practika_leto
             builder.Services.AddTransient<TechnologicalMapService>();
             builder.Services.AddTransient<ProductionOperationService>();
             builder.Services.AddTransient<DictionaryService>();
+            builder.Services.AddAutoMapper(typeof(RawMaterialArrivalService));
+            builder.Services.AddTransient<RawMaterialArrivalService>();
 
             // ✅ Добавлено — регистрация сервиса документов
             builder.Services.AddTransient<DocumentsMovementMaterialService>();

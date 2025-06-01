@@ -30,6 +30,8 @@ namespace Proect_practika_leto.Services
 
         public DbSet<ProductionOperation> ProductionOperations { get; set; }
 
+        public DbSet<RawMaterialArrival> RawMaterialArrivals { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Contractor>()
