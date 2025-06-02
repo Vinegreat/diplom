@@ -9,7 +9,7 @@ export default defineConfig({
   initialState: {},
   request: {},
   layout: {
-    title: 'Товарник',
+    title: 'Учета произ-ва и логистики товарных запасов',
   },
   routes: [
     {
@@ -32,17 +32,17 @@ export default defineConfig({
       component: './Zakazy'
     },  
     {
-      name:'Заказ на производство' ,
+      name:'Производственный заказ' ,
       path:'/productionOperations' ,
       component:'./ProductionOperations'
     },
     {
-      name:'ТехКарта' , 
+      name:'Тех.карты' , 
       path : '/technomap',
       component:'./TecnhoMap'
     },
     {
-      name:'Документы передвижения материалов' , 
+      name:'Документы движения материалов' , 
       path : '/documentMovementMaterial',
       component:'./DocumentMovementMaterial'
     },
