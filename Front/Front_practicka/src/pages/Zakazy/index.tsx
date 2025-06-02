@@ -58,24 +58,37 @@ const OrdersPage = () => {
 
   const handleSubmit = async (values) => {
     try {
+      const payload = {
+        ContractorCode: values.contractorCode,
+        MaterialCode: values.materialCode,
+        Quantity: values.quantity,
+        PlannedCompletionDate: values.plannedCompletionDate?.toISOString(),
+        ActualDateCompletion: values.actualDateCompletion?.toISOString() || null,
+        StaffCode: values.staffCode,
+      };
+  
       if (editingOrder) {
+        // ВАЖНО: сервер ждёт OrderNumber
         await axios.post(`${API_BASE}/Edit`, {
-          number: editingOrder.number,
-          ...values,
+          OrderNumber: editingOrder.number,
+          ...payload,
         });
         message.success('Заказ обновлён');
       } else {
-        await axios.post(`${API_BASE}/Add`, values);
+        await axios.post(`${API_BASE}/Add`, payload);
         message.success('Заказ добавлен');
       }
+  
       setIsModalOpen(false);
       form.resetFields();
       setEditingOrder(null);
       fetchData();
     } catch (err) {
+      console.error(err);
       message.error('Ошибка при сохранении');
     }
   };
+  
 
   const handleDelete = async (number) => {
     try {
@@ -134,7 +147,7 @@ const OrdersPage = () => {
             okText="Да"
             cancelText="Нет"
           >
-            <Button type="link" danger>Удалить</Button>
+            
           </Popconfirm>
         </Space>
       ),

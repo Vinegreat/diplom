@@ -132,7 +132,7 @@ const TechnologicalMapPage = () => {
             okText="Да"
             cancelText="Нет"
           >
-            <Button danger type="link">Удалить</Button>
+            
           </Popconfirm>
         </Space>
       )

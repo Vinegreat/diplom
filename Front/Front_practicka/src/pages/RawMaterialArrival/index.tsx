@@ -131,7 +131,7 @@ const RawMaterialArrivalPage = () => {
             onConfirm={() => handleDelete(record.id)}
             okText="Да" cancelText="Нет"
           >
-            <Button type="link" danger>Удалить</Button>
+            
           </Popconfirm>
         </Space>
       )

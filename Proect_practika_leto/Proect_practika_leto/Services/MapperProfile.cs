@@ -3,6 +3,7 @@ using Proect_practika_leto.DTO.ProductionOrders;
 using Proect_practika_leto.DTO.TechnologicalMaps;
 using Proect_practika_leto.DTO.ProductionOperations; // Добавлено для ProductionOperation
 using Proect_practika_leto.Entities;
+using Proect_practika_leto.DTO.RawMaterialArrival;
 
 namespace Proect_practika_leto.Services
 {
@@ -33,6 +34,8 @@ namespace Proect_practika_leto.Services
                 .ForMember(dest => dest.Code, opt => opt.Ignore()); // если обновляется вручную
 
             CreateMap<RawMaterialArrivalAddDTO, RawMaterialArrival>();
+
+            CreateMap<RawMaterialArrivalEditDTO, RawMaterialArrival>();
 
         }
     }

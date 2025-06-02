@@ -134,22 +134,13 @@ const ProductionOperations = () => {
     { title: "Оборудование", dataIndex: "equipmentCode", render: (code) => getLabel(equipments, "code", "name", code) },
     { title: "Склад сырья", dataIndex: "wareHouseRawMaterialCode", render: (code) => getLabel(warehouses, "code", "name", code) },
     { title: "Склад подготовленного материала", dataIndex: "wareHousePreparedMaterialCode", render: (code) => getLabel(warehouses, "code", "name", code) },
-    {
-      title: "Статус",
-      render: (_, record) => {
-        const status = statusMap[record.number];
-        if (status === 'done') return <Tag color="green">Готов</Tag>;
-        if (status === 'delayed') return <Tag color="red">Просрочен</Tag>;
-        if (status === 'process') return <Tag color="blue">В процессе</Tag>;
-        return null;
-      }
-    },
+    
     {
       title: "Действия",
       render: (_, record) => (
         <Space>
           <Button type="link" onClick={() => openModal(record)}>Редактировать</Button>
-          <Button danger type="link" onClick={() => handleDelete(record.number)}>Удалить</Button>
+          
         </Space>
       )
     }
@@ -168,11 +159,7 @@ const ProductionOperations = () => {
         <Search placeholder="Поиск по материалу, оборудованию или заказу" onSearch={setSearchText} allowClear style={{ width: 300 }} />
       </Space>
 
-      <Space style={{ marginBottom: 16 }}>
-        <Button onClick={() => data.forEach(d => setStatus(d.number, 'process'))}>В процессе</Button>
-        <Button onClick={() => data.forEach(d => setStatus(d.number, 'done'))} style={{ backgroundColor: '#52c41a', color: '#fff' }}>Готов</Button>
-        <Button onClick={() => data.forEach(d => setStatus(d.number, 'delayed'))} style={{ backgroundColor: '#ff4d4f', color: '#fff' }}>Просрочен</Button>
-      </Space>
+      
 
       <Table
         rowKey="number"
@@ -203,7 +190,7 @@ const ProductionOperations = () => {
               ))}
             </Select>
           </Form.Item>
-          <Form.Item name="preparedMaterialCode" label="Код подготовленного материала" rules={[{ required: true }]}> 
+          <Form.Item name="preparedMaterialCode" label=" Готовый материала" rules={[{ required: true }]}> 
             <Select placeholder="Выберите материал">
               {materials.map((item) => (
                 <Option key={item.code} value={item.code}>{item.nameMaterial.trim()}</Option>
@@ -213,21 +200,21 @@ const ProductionOperations = () => {
           <Form.Item name="amountPreparedProduction" label="Количество продукции" rules={[{ required: true }]}> 
             <InputNumber min={1} style={{ width: "100%" }} />
           </Form.Item>
-          <Form.Item name="equipmentCode" label="Код оборудования" rules={[{ required: true }]}> 
+          <Form.Item name="equipmentCode" label="Оборудования" rules={[{ required: true }]}> 
             <Select placeholder="Выберите оборудование">
               {equipments.map((item) => (
                 <Option key={item.code} value={item.code}>{item.name}</Option>
               ))}
             </Select>
           </Form.Item>
-          <Form.Item name="wareHouseRawMaterialCode" label="Код склада сырья" rules={[{ required: true }]}> 
+          <Form.Item name="wareHouseRawMaterialCode" label=" Склад сырья" rules={[{ required: true }]}> 
             <Select placeholder="Выберите склад сырья">
               {warehouses.map((item) => (
                 <Option key={item.code} value={item.code}>{item.name}</Option>
               ))}
             </Select>
           </Form.Item>
-          <Form.Item name="wareHousePreparedMaterialCode" label="Код склада подготовленного материала" rules={[{ required: true }]}> 
+          <Form.Item name="wareHousePreparedMaterialCode" label=" Склад готового материала" rules={[{ required: true }]}> 
             <Select placeholder="Выберите склад подготовленного материала">
               {warehouses.map((item) => (
                 <Option key={item.code} value={item.code}>{item.name}</Option>
