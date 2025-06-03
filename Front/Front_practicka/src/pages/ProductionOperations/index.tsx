@@ -154,7 +154,7 @@ const ProductionOperations = () => {
   return (
     <div className="p-6">
       <Space style={{ marginBottom: 16 }}>
-        <Button type="primary" onClick={() => openModal()}>Добавить запись</Button>
+        <Button type="primary" onClick={() => openModal()}>Добавить производственный заказ</Button>
         <Button onClick={exportToExcel}>Экспорт в Excel</Button>
         <Search placeholder="Поиск по материалу, оборудованию или заказу" onSearch={setSearchText} allowClear style={{ width: 300 }} />
       </Space>
@@ -172,7 +172,7 @@ const ProductionOperations = () => {
 
       <Modal
         open={isModalOpen}
-        title={editingRecord ? "Редактировать запись" : "Добавить запись"}
+        title={editingRecord ? "Редактировать запись" : "Добавить производственный заказ"}
         onCancel={() => {
           setIsModalOpen(false);
           setEditingRecord(null);

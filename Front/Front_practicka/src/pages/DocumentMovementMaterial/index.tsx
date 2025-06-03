@@ -148,7 +148,7 @@ const DocumentMovementMaterialPage = () => {
   return (
     <div className="p-6">
       <Space style={{ marginBottom: 16 }}>
-        <Button type="primary" onClick={() => openModal()}>Добавить документ</Button>
+        <Button type="primary" onClick={() => openModal()}>Добавить документ движения материалов</Button>
         <Search placeholder="Поиск" onSearch={setSearchText} enterButton allowClear />
       </Space>
 
@@ -165,7 +165,7 @@ const DocumentMovementMaterialPage = () => {
 
       <Modal
         open={isModalOpen}
-        title={editingDocument ? 'Редактировать документ' : 'Добавить документ'}
+        title={editingDocument ? 'Редактировать документ' : 'Добавить документ движения материалов'}
         onCancel={() => {
           setIsModalOpen(false);
           setEditingDocument(null);

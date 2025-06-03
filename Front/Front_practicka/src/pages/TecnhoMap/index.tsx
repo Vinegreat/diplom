@@ -147,7 +147,7 @@ const TechnologicalMapPage = () => {
   return (
     <div className="p-6">
       <Space style={{ marginBottom: 16 }}>
-        <Button type="primary" onClick={() => openModal()}>Добавить</Button>
+        <Button type="primary" onClick={() => openModal()}>Добавить тех. карту</Button>
         <Button onClick={exportToExcel}>Экспорт в Excel</Button>
         <Search placeholder="Поиск по материалу" onSearch={setSearchText} allowClear style={{ width: 300 }} />
       </Space>
@@ -162,7 +162,7 @@ const TechnologicalMapPage = () => {
 
       <Modal
         open={isModalOpen}
-        title={editingItem ? 'Редактировать' : 'Добавить'}
+        title={editingItem ? 'Редактировать' : 'Добавить тех. карту'}
         onCancel={() => {
           setIsModalOpen(false);
           setEditingItem(null);

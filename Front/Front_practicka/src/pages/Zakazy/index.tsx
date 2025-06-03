@@ -1,5 +1,3 @@
-// ✅ ОБНОВЛЕННЫЙ КОД ДЛЯ СТРАНИЦЫ ЗАКАЗОВ С ФИКСОМ ДАТЫ
-
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import {
@@ -66,9 +64,8 @@ const OrdersPage = () => {
         ActualDateCompletion: values.actualDateCompletion?.toISOString() || null,
         StaffCode: values.staffCode,
       };
-  
+
       if (editingOrder) {
-        // ВАЖНО: сервер ждёт OrderNumber
         await axios.post(`${API_BASE}/Edit`, {
           OrderNumber: editingOrder.number,
           ...payload,
@@ -78,7 +75,7 @@ const OrdersPage = () => {
         await axios.post(`${API_BASE}/Add`, payload);
         message.success('Заказ добавлен');
       }
-  
+
       setIsModalOpen(false);
       form.resetFields();
       setEditingOrder(null);
@@ -88,7 +85,6 @@ const OrdersPage = () => {
       message.error('Ошибка при сохранении');
     }
   };
-  
 
   const handleDelete = async (number) => {
     try {
@@ -141,14 +137,17 @@ const OrdersPage = () => {
       render: (_, record) => (
         <Space>
           <Button type="link" onClick={() => openModal(record)}>Редактировать</Button>
+          {/* Кнопка удаления скрыта */}
+          {/*
           <Popconfirm
             title="Удалить заказ?"
             onConfirm={() => handleDelete(record.number)}
             okText="Да"
             cancelText="Нет"
           >
-            
+            <Button type="link" danger>Удалить</Button>
           </Popconfirm>
+          */}
         </Space>
       ),
     },
@@ -200,30 +199,32 @@ const OrdersPage = () => {
         cancelText="Отмена"
       >
         <Form form={form} layout="vertical" onFinish={handleSubmit}>
-          <Form.Item name="contractorCode" label="Контрагент" rules={[{ required: true }]}> 
+          <Form.Item name="contractorCode" label="Контрагент" rules={[{ required: true }]}>
             <Select placeholder="Выберите контрагента">
               {contractors.map((c) => (
                 <Option key={c.code} value={c.code}>{c.name}</Option>
               ))}
             </Select>
           </Form.Item>
-          <Form.Item name="materialCode" label="Материал" rules={[{ required: true }]}> 
+          <Form.Item name="materialCode" label="Материал" rules={[{ required: true }]}>
             <Select placeholder="Выберите материал">
               {materials.map((m) => (
                 <Option key={m.code} value={m.code}>{m.nameMaterial}</Option>
               ))}
             </Select>
           </Form.Item>
-          <Form.Item name="quantity" label="Количество" rules={[{ required: true }]}> 
+          <Form.Item name="quantity" label="Количество" rules={[{ required: true }]}>
             <InputNumber min={1} style={{ width: '100%' }} />
           </Form.Item>
-          <Form.Item name="plannedCompletionDate" label="Плановая дата" rules={[{ required: true }]}> 
+          <Form.Item name="plannedCompletionDate" label="Плановая дата" rules={[{ required: true }]}>
             <DatePicker showTime style={{ width: '100%' }} />
           </Form.Item>
-          <Form.Item name="actualDateCompletion" label="Фактическая дата"> 
-            <DatePicker showTime style={{ width: '100%' }} />
-          </Form.Item>
-          <Form.Item name="staffCode" label="Сотрудник" rules={[{ required: true }]}> 
+          {editingOrder && (
+            <Form.Item name="actualDateCompletion" label="Фактическая дата">
+              <DatePicker showTime style={{ width: '100%' }} />
+            </Form.Item>
+          )}
+          <Form.Item name="staffCode" label="Сотрудник" rules={[{ required: true }]}>
             <Select placeholder="Выберите сотрудника">
               {staffs.map((s) => (
                 <Option key={s.code} value={s.code}>{s.fullName}</Option>

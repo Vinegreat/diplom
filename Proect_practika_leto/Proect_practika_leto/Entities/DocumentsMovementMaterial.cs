@@ -8,9 +8,9 @@ namespace Proect_practika_leto.Entities
         [Key]
         public int Code { get; set; }
 
-        public DateOnly DateDocument { get; set; }
+        public DateTime DateDocument { get; set; }
 
-        public DateOnly DateDocumentCreated {  get; set; }
+        public DateTime DateDocumentCreated {  get; set; }
 
         public TypeMovementMaterial TypeMovementsMaterial { get; set; }
 

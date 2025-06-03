@@ -9,7 +9,7 @@ export default defineConfig({
   initialState: {},
   request: {},
   layout: {
-    title: 'Учета произ-ва и логистики товарных запасов',
+    title: 'Учет произ-ва ',
   },
   routes: [
     {

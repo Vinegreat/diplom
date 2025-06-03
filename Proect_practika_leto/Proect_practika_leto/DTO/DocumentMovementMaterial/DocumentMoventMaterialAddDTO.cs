@@ -4,8 +4,8 @@ namespace Proect_practika_leto.DTO.ProductionOperations
 {
     public class DocumentsMovementMaterialAddDTO
     {
-        public DateOnly DateDocument { get; set; }
-        public DateOnly DateDocumentCreated { get; set; }
+        public DateTime DateDocument { get; set; }
+        public DateTime DateDocumentCreated { get; set; }
         public int TypeMovementMaterialCode { get; set; }
         public int MaterialCode { get; set; }
         public int QuantityMaterial { get; set; }
