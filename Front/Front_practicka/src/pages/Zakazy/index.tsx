@@ -6,6 +6,7 @@ import {
 } from 'antd';
 import dayjs from 'dayjs';
 import * as XLSX from 'xlsx';
+import { ColumnType, ColumnsType } from 'antd/es/table';
 
 const { Option } = Select;
 const { Search } = Input;
@@ -123,14 +124,18 @@ const OrdersPage = () => {
     order.staff?.fullName?.toLowerCase().includes(searchText.toLowerCase())
   );
 
-  const columns = [
+  const columns: ColumnType<{
+    plannedCompletionDate : Date ,
+    actualDateCompletion  :  Date
+  }>[] = [
     { title: 'Номер', dataIndex: 'number' },
-    { title: 'Дата', dataIndex: 'date', render: (d) => new Date(d).toLocaleString() },
+    { title: 'Дата', dataIndex: 'date', render: (d) => dayjs(d).format("DD.MM.YYYY") },
     { title: 'Контрагент', dataIndex: ['contractor', 'name'] },
     { title: 'Материал', dataIndex: ['material', 'nameMaterial'] },
+    {title: 'Единица измерения',dataIndex:['material','measurementUnit','name'] },
     { title: 'Кол-во', dataIndex: 'quantity' },
-    { title: 'Плановая дата', dataIndex: 'plannedCompletionDate', render: (d) => new Date(d).toLocaleString() },
-    { title: 'Факт. дата', dataIndex: 'actualDateCompletion', render: (d) => new Date(d).toLocaleString() },
+    { title: 'Плановая дата', dataIndex: 'plannedCompletionDate', render: (d) => dayjs(d).format("DD.MM.YYYY")},
+    { title: 'Факт. дата', dataIndex: 'actualDateCompletion', render: (d) => dayjs(d).format("DD.MM.YYYY") },
     { title: 'Сотрудник', dataIndex: ['staff', 'fullName'] },
     {
       title: 'Действия',
@@ -217,11 +222,11 @@ const OrdersPage = () => {
             <InputNumber min={1} style={{ width: '100%' }} />
           </Form.Item>
           <Form.Item name="plannedCompletionDate" label="Плановая дата" rules={[{ required: true }]}>
-            <DatePicker showTime style={{ width: '100%' }} />
+            <DatePicker  style={{ width: '100%' }} />
           </Form.Item>
           {editingOrder && (
             <Form.Item name="actualDateCompletion" label="Фактическая дата">
-              <DatePicker showTime style={{ width: '100%' }} />
+              <DatePicker  style={{ width: '100%' }} />
             </Form.Item>
           )}
           <Form.Item name="staffCode" label="Сотрудник" rules={[{ required: true }]}>

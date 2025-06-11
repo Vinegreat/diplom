@@ -111,6 +111,7 @@ const RawMaterialArrivalPage = () => {
   const columns = [
     { title: 'Дата', dataIndex: 'date', render: d => new Date(d).toLocaleDateString() },
     { title: 'Материал', dataIndex: ['material', 'nameMaterial'] },
+    {title: 'Единица измерения',dataIndex:['material','measurementUnit','name'] },
     { title: 'Кол-во', dataIndex: 'quantity' },
     {
       title: 'Склад',
@@ -146,7 +147,7 @@ const RawMaterialArrivalPage = () => {
   return (
     <div className="p-6">
       <Space style={{ marginBottom: 16 }}>
-        <Button type="primary" onClick={() => openModal()}>Добавить сырье или готовый материал</Button>
+        <Button type="primary" onClick={() => openModal()}>Поступление сырья</Button>
         <Button onClick={exportToExcel}>Экспорт в Excel</Button>
         <Search placeholder="Поиск" onSearch={setSearchText} allowClear style={{ width: 300 }} />
       </Space>
@@ -155,7 +156,7 @@ const RawMaterialArrivalPage = () => {
 
       <Modal
         open={isModalOpen}
-        title={editingItem ? 'Редактировать' : 'Добавить сырье или готовый материал'}
+        title={editingItem ? 'Редактировать' : ' Поступление сырья'}
         onCancel={() => {
           setIsModalOpen(false);
           setEditingItem(null);

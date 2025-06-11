@@ -8,7 +8,7 @@ namespace Proect_practika_leto.Services
     public class ProductionOrderService(DbPractickaContext dbcontext,IMapper mapper)
     {
         public async Task<List<ProductionOrder>> GetAll() { 
-            return await dbcontext.ProductionOrders.Include(x=>x.Material).Include(x=>x.Contractor).Include(x=>x.Staff).ToListAsync();
+            return await dbcontext.ProductionOrders.Include(x=>x.Material).ThenInclude(x=>x.MeasurementUnit).Include(x=>x.Contractor).Include(x=>x.Staff).ToListAsync();
         }
         public async Task<int> AddNew(OrderAddDTO orderAddDTO )
         {

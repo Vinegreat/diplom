@@ -10,6 +10,7 @@ public class RawMaterialArrivalService(DbPractickaContext context, IMapper mappe
     {
         return await context.RawMaterialArrivals
             .Include(x => x.Material)
+            .ThenInclude(x => x.MeasurementUnit)
             .Include(x => x.WareHouse)
             .ToListAsync();
     }

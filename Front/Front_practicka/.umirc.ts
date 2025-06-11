@@ -32,12 +32,12 @@ export default defineConfig({
       component: './Zakazy'
     },  
     {
-      name:'Производственный заказ' ,
+      name:'Производственные операции' ,
       path:'/productionOperations' ,
       component:'./ProductionOperations'
     },
     {
-      name:'Тех.карты' , 
+      name:'Тех. карты' , 
       path : '/technomap',
       component:'./TecnhoMap'
     },
@@ -47,7 +47,7 @@ export default defineConfig({
       component:'./DocumentMovementMaterial'
     },
     {
-      name:'Добавления сырья' , 
+      name:'Поступление сырья' , 
       path : '/rawMaterialArrival',
       component:'./RawMaterialArrival'
     }  
